@@ -1,0 +1,1145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ShopSphere - Multi-Role E-commerce Platform</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --secondary: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --dark: #1f2937;
+            --light: #f9fafb;
+            --border: #e5e7eb;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        body.dark {
+            --light: #1f2937;
+            --dark: #f9fafb;
+            --border: #374151;
+            background: linear-gradient(135deg, #1f2937 0%, #111827 100%);
+        }
+
+        /* Auth Page */
+        .auth-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .auth-card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 450px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary));
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .logo h1 {
+            color: var(--primary);
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .logo p {
+            color: #6b7280;
+            font-size: 0.9rem;
+        }
+
+        .social-login {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-bottom: 30px;
+        }
+
+        .social-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .social-btn:hover {
+            border-color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        .divider {
+            text-align: center;
+            margin: 20px 0;
+            position: relative;
+            color: #6b7280;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: var(--border);
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 15px;
+        }
+
+        .role-selector {
+            margin-bottom: 20px;
+        }
+
+        .role-options {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+        }
+
+        .role-option {
+            padding: 15px 10px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .role-option:hover, .role-option.active {
+            border-color: var(--primary);
+            background: #f0f9ff;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid var(--border);
+            border-radius: 10px;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+
+        .referral-section {
+            background: #f0f9ff;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #5b21b6;
+            transform: translateY(-2px);
+        }
+
+        .biometric-login {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .biometric-btn {
+            background: none;
+            border: 2px solid var(--border);
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            font-size: 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin: 0 10px;
+        }
+
+        .biometric-btn:hover {
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        /* Home Page */
+        .home-page {
+            display: none;
+            background: var(--light);
+            min-height: 100vh;
+            padding-bottom: 80px;
+        }
+
+        .header {
+            background: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .search-bar {
+            flex: 1;
+            max-width: 500px;
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 12px 50px 12px 15px;
+            border: 2px solid var(--border);
+            border-radius: 25px;
+            font-size: 1rem;
+        }
+
+        .search-actions {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            gap: 5px;
+        }
+
+        .search-btn {
+            background: none;
+            border: none;
+            padding: 8px;
+            cursor: pointer;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .currency-selector, .lang-selector {
+            padding: 8px 12px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .dark-toggle {
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 50%;
+            transition: all 0.3s ease;
+        }
+
+        /* Flash Sale */
+        .flash-sale {
+            background: linear-gradient(135deg, #ff6b6b, #feca57);
+            color: white;
+            padding: 20px;
+            text-align: center;
+            margin: 20px;
+            border-radius: 15px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .countdown {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .countdown-item {
+            background: rgba(255,255,255,0.2);
+            padding: 10px 15px;
+            border-radius: 10px;
+            text-align: center;
+        }
+
+        /* AI Assistant */
+        .ai-assistant {
+            position: fixed;
+            bottom: 80px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 5px 20px rgba(99, 102, 241, 0.3);
+            z-index: 1000;
+            animation: pulse-glow 2s infinite;
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .ai-chat {
+            position: fixed;
+            bottom: 150px;
+            right: 20px;
+            width: 300px;
+            height: 400px;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            display: none;
+            flex-direction: column;
+            z-index: 1001;
+        }
+
+        .ai-chat-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            border-radius: 20px 20px 0 0;
+            font-weight: 600;
+        }
+
+        .ai-chat-messages {
+            flex: 1;
+            padding: 15px;
+            overflow-y: auto;
+        }
+
+        .ai-message {
+            background: var(--light);
+            padding: 10px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+
+        .ai-chat-input {
+            padding: 15px;
+            border-top: 1px solid var(--border);
+        }
+
+        .ai-input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            outline: none;
+        }
+
+        /* Group Buying */
+        .group-buying {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            margin: 20px;
+            border-radius: 15px;
+        }
+
+        .group-progress {
+            background: rgba(255,255,255,0.2);
+            height: 10px;
+            border-radius: 5px;
+            margin: 15px 0;
+            overflow: hidden;
+        }
+
+        .group-progress-bar {
+            background: white;
+            height: 100%;
+            border-radius: 5px;
+            transition: width 0.3s ease;
+        }
+
+        .group-members {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .member-avatar {
+            width: 40px;
+            height: 40px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+        }
+
+        /* Categories */
+        .categories {
+            padding: 20px;
+        }
+
+        .category-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .category-item {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .category-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .category-icon {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        /* Products */
+        .products {
+            padding: 20px;
+        }
+
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .product-card {
+            background: white;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .product-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+
+        .product-image {
+            width: 100%;
+            height: 200px;
+            background: var(--light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+        }
+
+        .product-badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            background: var(--danger);
+            color: white;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .product-info {
+            padding: 15px;
+        }
+
+        .product-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--dark);
+        }
+
+        .product-price {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+
+        .current-price {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: var(--primary);
+        }
+
+        .original-price {
+            text-decoration: line-through;
+            color: #6b7280;
+        }
+
+        .discount {
+            background: var(--success);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.8rem;
+        }
+
+        .product-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-small {
+            flex: 1;
+            padding: 8px 12px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .btn-outline {
+            background: white;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary);
+            color: white;
+        }
+
+        /* Bottom Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: white;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-around;
+            padding: 10px 0;
+            z-index: 1000;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            color: #6b7280;
+        }
+
+        .nav-item.active {
+            color: var(--primary);
+        }
+
+        .nav-item:hover {
+            color: var(--primary);
+        }
+
+        .nav-icon {
+            font-size: 1.5rem;
+            margin-bottom: 2px;
+        }
+
+        .nav-label {
+            font-size: 0.7rem;
+            font-weight: 500;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .auth-card {
+                padding: 30px 20px;
+            }
+
+            .role-options {
+                grid-template-columns: 1fr;
+            }
+
+            .social-login {
+                grid-template-columns: 1fr;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 15px;
+            }
+
+            .search-bar {
+                margin: 0;
+                max-width: none;
+            }
+
+            .category-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .product-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .ai-chat {
+                width: 90%;
+                right: 5%;
+            }
+        }
+
+        /* Animations */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body>
+    <!-- Login/Registration Page -->
+    <div id="authPage" class="auth-container">
+        <div class="auth-card fade-in">
+            <div class="logo">
+                <h1>🛍️ ShopSphere</h1>
+                <p>Your Multi-Role Shopping Destination</p>
+            </div>
+
+            <div class="social-login">
+                <button class="social-btn" onclick="socialLogin('google')">📧 Google</button>
+                <button class="social-btn" onclick="socialLogin('facebook')">📘 Facebook</button>
+                <button class="social-btn" onclick="socialLogin('phone')">📱 Phone OTP</button>
+                <button class="social-btn" onclick="socialLogin('whatsapp')">💬 WhatsApp</button>
+            </div>
+
+            <div class="divider"><span>or continue with</span></div>
+
+            <div class="role-selector">
+                <h3>Choose Your Role</h3>
+                <div class="role-options">
+                    <div class="role-option active" data-role="buyer">
+                        <div>🛒</div>
+                        <div>Buyer</div>
+                    </div>
+                    <div class="role-option" data-role="reseller">
+                        <div>📈</div>
+                        <div>Reseller</div>
+                    </div>
+                    <div class="role-option" data-role="vendor">
+                        <div>🏪</div>
+                        <div>Vendor</div>
+                    </div>
+                </div>
+            </div>
+
+            <form id="authForm">
+                <div class="form-group">
+                    <input type="tel" id="mobile" placeholder="Mobile Number" required>
+                </div>
+
+                <div class="referral-section">
+                    <h4>🎁 Have a Referral Code?</h4>
+                    <p>Enter code to earn instant credits!</p>
+                    <div class="form-group">
+                        <input type="text" id="referralCode" placeholder="Enter referral code (optional)">
+                    </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">Send OTP & Continue</button>
+            </form>
+
+            <div class="biometric-login">
+                <p style="margin-bottom: 15px; color: #6b7280;">Quick Access</p>
+                <button class="biometric-btn" onclick="biometricLogin('fingerprint')">👆</button>
+                <button class="biometric-btn" onclick="biometricLogin('face')">😊</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Home Page -->
+    <div id="homePage" class="home-page">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <h2 style="color: var(--primary);">🛍️ ShopSphere</h2>
+                </div>
+                
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="Search products...">
+                    <div class="search-actions">
+                        <button class="search-btn" onclick="voiceSearch()">🎤</button>
+                        <button class="search-btn" onclick="imageSearch()">📷</button>
+                        <button class="search-btn" onclick="search()">🔍</button>
+                    </div>
+                </div>
+
+                <div class="header-actions">
+                    <select class="currency-selector" onchange="changeCurrency(this.value)">
+                        <option value="USD">$ USD</option>
+                        <option value="EUR">€ EUR</option>
+                        <option value="INR">₹ INR</option>
+                    </select>
+                    
+                    <select class="lang-selector" onchange="changeLanguage(this.value)">
+                        <option value="en">🇺🇸 EN</option>
+                        <option value="es">🇪🇸 ES</option>
+                        <option value="fr">🇫🇷 FR</option>
+                    </select>
+
+                    <button class="dark-toggle" onclick="toggleDarkMode()">🌙</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="flash-sale">
+            <h2>⚡ FLASH SALE - UP TO 70% OFF!</h2>
+            <p>Limited time offer - Don't miss out!</p>
+            <div class="countdown">
+                <div class="countdown-item">
+                    <span id="hours">12</span>
+                    <small>Hours</small>
+                </div>
+                <div class="countdown-item">
+                    <span id="minutes">34</span>
+                    <small>Minutes</small>
+                </div>
+                <div class="countdown-item">
+                    <span id="seconds">56</span>
+                    <small>Seconds</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="group-buying">
+            <h3>👥 Group Buying - Save More Together!</h3>
+            <p>Get 25% extra discount when 5 friends buy together</p>
+            <div class="group-progress">
+                <div class="group-progress-bar" style="width: 60%"></div>
+            </div>
+            <p>3 of 5 friends joined • 2 more needed</p>
+            <div class="group-members">
+                <div class="member-avatar">👤</div>
+                <div class="member-avatar">👤</div>
+                <div class="member-avatar">👤</div>
+                <div class="member-avatar">+</div>
+                <div class="member-avatar">+</div>
+            </div>
+            <button class="btn" style="background: white; color: var(--primary); margin-top: 15px;">
+                Invite Friends
+            </button>
+        </div>
+
+        <section class="categories">
+            <h2>🏷️ Shop by Category</h2>
+            <div class="category-grid">
+                <div class="category-item" onclick="filterByCategory('electronics')">
+                    <div class="category-icon">📱</div>
+                    <h4>Electronics</h4>
+                </div>
+                <div class="category-item" onclick="filterByCategory('fashion')">
+                    <div class="category-icon">👗</div>
+                    <h4>Fashion</h4>
+                </div>
+                <div class="category-item" onclick="filterByCategory('home')">
+                    <div class="category-icon">🏠</div>
+                    <h4>Home & Garden</h4>
+                </div>
+                <div class="category-item" onclick="filterByCategory('beauty')">
+                    <div class="category-icon">💄</div>
+                    <h4>Beauty</h4>
+                </div>
+            </div>
+        </section>
+
+        <section class="products">
+            <h2>🔥 Trending Products</h2>
+            <div class="product-grid" id="productGrid"></div>
+        </section>
+
+        <div class="ai-assistant" onclick="toggleAIChat()">🤖</div>
+
+        <div class="ai-chat" id="aiChat">
+            <div class="ai-chat-header">🤖 AI Shopping Assistant</div>
+            <div class="ai-chat-messages" id="aiMessages">
+                <div class="ai-message">Hi! How can I help you find the perfect product today?</div>
+            </div>
+            <div class="ai-chat-input">
+                <input type="text" class="ai-input" placeholder="Ask me anything..." onkeypress="handleAIInput(event)">
+            </div>
+        </div>
+
+        <nav class="bottom-nav">
+            <div class="nav-item active" onclick="switchTab('home')">
+                <div class="nav-icon">🏠</div>
+                <div class="nav-label">Home</div>
+            </div>
+            <div class="nav-item" onclick="switchTab('search')">
+                <div class="nav-icon">🔍</div>
+                <div class="nav-label">Search</div>
+            </div>
+            <div class="nav-item" onclick="switchTab('sell')">
+                <div class="nav-icon">➕</div>
+                <div class="nav-label">Sell</div>
+            </div>
+            <div class="nav-item" onclick="switchTab('chat')">
+                <div class="nav-icon">💬</div>
+                <div class="nav-label">Chat</div>
+            </div>
+            <div class="nav-item" onclick="switchTab('profile')">
+                <div class="nav-icon">👤</div>
+                <div class="nav-label">Profile</div>
+            </div>
+        </nav>
+    </div>
+
+    <script>
+        let currentUser = null;
+        let currentRole = 'buyer';
+        let currentCurrency = 'USD';
+        let isDarkMode = false;
+
+        const products = [
+            {
+                id: 1,
+                title: "Wireless Bluetooth Headphones",
+                price: 79.99,
+                originalPrice: 129.99,
+                discount: 38,
+                category: "electronics",
+                image: "🎧",
+                badge: "BESTSELLER"
+            },
+            {
+                id: 2,
+                title: "Summer Fashion Dress",
+                price: 45.99,
+                originalPrice: 89.99,
+                discount: 49,
+                category: "fashion",
+                image: "👗",
+                badge: "NEW"
+            },
+            {
+                id: 3,
+                title: "Smart Home Speaker",
+                price: 99.99,
+                originalPrice: 149.99,
+                discount: 33,
+                category: "electronics",
+                image: "🔊",
+                badge: "SALE"
+            }
+        ];
+
+        // Authentication
+        function socialLogin(provider) {
+            showNotification(`Connecting to ${provider}...`, 'info');
+            setTimeout(() => {
+                showNotification(`${provider} login successful!`, 'success');
+                showHomePage();
+            }, 2000);
+        }
+
+        function biometricLogin(type) {
+            showNotification(`${type} authentication in progress...`, 'info');
+            setTimeout(() => {
+                showNotification(`${type} login successful!`, 'success');
+                showHomePage();
+            }, 1500);
+        }
+
+        // Role Selection
+        document.querySelectorAll('.role-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                currentRole = this.dataset.role;
+            });
+        });
+
+        // Form Submission
+        document.getElementById('authForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const mobile = document.getElementById('mobile').value;
+            const referralCode = document.getElementById('referralCode').value;
+            
+            if (mobile) {
+                showNotification('Sending OTP...', 'info');
+                setTimeout(() => {
+                    showNotification('OTP sent successfully!', 'success');
+                    if (referralCode) {
+                        showNotification('Referral code applied! +100 credits earned!', 'success');
+                    }
+                    showHomePage();
+                }, 2000);
+            }
+        });
+
+        function showHomePage() {
+            document.getElementById('authPage').style.display = 'none';
+            document.getElementById('homePage').style.display = 'block';
+            loadProducts();
+            startCountdown();
+        }
+
+        function loadProducts() {
+            const productGrid = document.getElementById('productGrid');
+            productGrid.innerHTML = '';
+            
+            products.forEach(product => {
+                const card = createProductCard(product);
+                productGrid.appendChild(card);
+            });
+        }
+
+        function createProductCard(product) {
+            const card = document.createElement('div');
+            card.className = 'product-card';
+            card.innerHTML = `
+                <div class="product-image">
+                    ${product.image}
+                    <div class="product-badge">${product.badge}</div>
+                </div>
+                <div class="product-info">
+                    <h4 class="product-title">${product.title}</h4>
+                    <div class="product-price">
+                        <span class="current-price">${formatPrice(product.price)}</span>
+                        <span class="original-price">${formatPrice(product.originalPrice)}</span>
+                        <span class="discount">${product.discount}% OFF</span>
+                    </div>
+                    <div class="product-actions">
+                        <button class="btn-small btn-outline" onclick="addToWishlist(${product.id})">❤️</button>
+                        <button class="btn-small btn-primary" onclick="addToCart(${product.id})">Add to Cart</button>
+                    </div>
+                </div>
+            `;
+            return card;
+        }
+
+        function formatPrice(price) {
+            const symbols = { USD: '$', EUR: '€', INR: '₹' };
+            return `${symbols[currentCurrency]}${price.toFixed(2)}`;
+        }
+
+        // Search Functions
+        function search() {
+            const query = document.querySelector('.search-input').value;
+            showNotification(`Searching for: ${query}`, 'info');
+        }
+
+        function voiceSearch() {
+            showNotification('Voice search activated!', 'info');
+        }
+
+        function imageSearch() {
+            showNotification('Image search activated!', 'info');
+        }
+
+        function filterByCategory(category) {
+            showNotification(`Filtering by: ${category}`, 'info');
+        }
+
+        function addToCart(productId) {
+            showNotification('Added to cart!', 'success');
+        }
+
+        function addToWishlist(productId) {
+            showNotification('Added to wishlist!', 'success');
+        }
+
+        // AI Assistant
+        function toggleAIChat() {
+            const aiChat = document.getElementById('aiChat');
+            aiChat.style.display = aiChat.style.display === 'flex' ? 'none' : 'flex';
+        }
+
+        function handleAIInput(event) {
+            if (event.key === 'Enter') {
+                const input = event.target;
+                const message = input.value.trim();
+                if (message) {
+                    addAIMessage(message, 'user');
+                    input.value = '';
+                    
+                    setTimeout(() => {
+                        const responses = [
+                            "I found 15 products matching your criteria!",
+                            "Based on your preferences, I recommend electronics.",
+                            "What's your budget range?",
+                            "Let me find similar products with better reviews."
+                        ];
+                        const response = responses[Math.floor(Math.random() * responses.length)];
+                        addAIMessage(response, 'ai');
+                    }, 1000);
+                }
+            }
+        }
+
+        function addAIMessage(message, sender) {
+            const messagesContainer = document.getElementById('aiMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'ai-message';
+            messageDiv.style.background = sender === 'user' ? 'var(--primary)' : 'var(--light)';
+            messageDiv.style.color = sender === 'user' ? 'white' : 'var(--dark)';
+            messageDiv.textContent = message;
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function startCountdown() {
+            let hours = 12, minutes = 34, seconds = 56;
+            
+            setInterval(() => {
+                seconds--;
+                if (seconds < 0) {
+                    seconds = 59;
+                    minutes--;
+                    if (minutes < 0) {
+                        minutes = 59;
+                        hours--;
+                        if (hours < 0) hours = 23;
+                    }
+                }
+                
+                document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+                document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+                document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+            }, 1000);
+        }
+
+        function changeCurrency(currency) {
+            currentCurrency = currency;
+            showNotification(`Currency changed to ${currency}`, 'info');
+            loadProducts();
+        }
+
+        function changeLanguage(language) {
+            showNotification(`Language changed`, 'info');
+        }
+
+        function toggleDarkMode() {
+            isDarkMode = !isDarkMode;
+            document.body.classList.toggle('dark', isDarkMode);
+            document.querySelector('.dark-toggle').textContent = isDarkMode ? '☀️' : '🌙';
+            showNotification(`${isDarkMode ? 'Dark' : 'Light'} mode activated`, 'info');
+        }
+
+        function switchTab(tab) {
+            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+            event.currentTarget.classList.add('active');
+            showNotification(`Switched to ${tab} tab`, 'info');
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: ${type === 'success' ? '#10b981' : type === 'warning' ? '#f59e0b' : '#6366f1'};
+                color: white;
+                padding: 15px 20px;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 10000;
+                max-width: 300px;
+                font-weight: 500;
+            `;
+            
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => notification.remove(), 3000);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            showNotification('Welcome to ShopSphere! 🛍️', 'success');
+        });
+    </script>
+</body>
+</html>
